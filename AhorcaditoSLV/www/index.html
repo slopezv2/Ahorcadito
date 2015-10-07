@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--
+        Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
+        For details, see http://go.microsoft.com/fwlink/?LinkID=617521
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+    <title>AhorcaditoSLV</title>
+
+    <!-- AhorcaditoSLV references -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="css/index.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="main">
+        <div class="jumbotron">
+
+            <h1 class="text-center">Ahorcadito</h1>
+        </div>
+        <div class="container-fluid">
+            <p class="text-left" style="font-size:large">
+                    Hola, creo que sobra las explicaciones... sólo diré que debes adivinar la palabra introduciendo letra por letra la palabra
+            </p>
+            <br />
+            <img src="images/ahorcado.gif" class="img-rounded center-block" alt="Error" width="200" height="300"/>
+            <br>
+            <br>
+            <button type="button" class="btn btn-success btn-block " id="btMainPlay" style="font-size:large">Jugar</button>
+            <img src="images/death.png" class="hidden" alt="error" width="48" height="108" id="deathImage"/>
+        </div>
+    </div>
+    <div id="categories" class="hidden">
+        <div class="jumbotron">
+            <h1 class="text-center">Categorias</h1>
+        </div>
+        <div class="container-fluid">
+            <div class="list-group">
+                <button type="button" class="list-group-item" id="systemsOption">Ing. Sistemas</button>
+                <button type="button" class="list-group-item disabled">Nope</button>
+                <button type="button" class="list-group-item disabled">Nothing to do here</button>
+                <button type="button" class="list-group-item disabled">Stop looking for other category!</button>
+                <button type="button" class="list-group-item disabled">no enough time for more...</button>
+                <br />
+                <br />
+                <button type="button" class="btn btn-default btn-lg center-block" id="btBackCategories">
+                    <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="pantallaJugar" class="hidden">
+        <div class="jumbotron">
+            <h1 class="text-center">Ahorcadito</h1>
+        </div>
+        <div class="container-fluid">
+            <canvas id="myCanvas" height="300">
+                Not Supported
+            </canvas>
+            <br />
+            <br />
+            <input type="text" id="letter" maxlength="1" class="center-block" pattern="[A-Za-z]{1}" size="1"/>
+            <br />
+            <button id="probar" class="btn btn-success btn-block">Probar</button>
+            <br />
+            <br />
+            <button type="button" class="btn btn-default btn-lg center-block" id="btBackScreenPlay">
+                <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+   
+    <!-- Cordova reference, this is added to your app when it's built. -->
+    <script src="cordova.js"></script>
+    <script src="scripts/platformOverrides.js"></script>
+    <script src="scripts/JQuery.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/index.js"></script>
+
+</body>
+</html>

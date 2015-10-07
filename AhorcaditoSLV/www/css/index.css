@@ -1,0 +1,14 @@
+﻿body {
+}
+.btn-success{
+    height: 60px;
+}
+
+canvas{
+    width: 100%;
+    height: auto;
+    border:1px solid #000000;
+}
+.list-group-item{
+    font-size: large;
+}
