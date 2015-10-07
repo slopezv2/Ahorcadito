@@ -6,13 +6,21 @@ var lugar = "main";
 var posX = 0;
 var posY = 0;
 var category = "";
-var systemsWords = ["microsoft", "cordova", "cloud", "visual studio", "xbox", "azure"];
+var systemsWords = ["microsoft", "cordova", "cloud", "visual studio", "xbox", "azure", "office365",
+                    "minecraft","unity","jquery"];
 var timeFail = 0;
+var playing = true;
 var systemsHelp = ["Empresa que surge y revoluciona las computadoras personales",
-                    "framework de desarrollo híbrido", "las empresas ahora optan por _______ computing",
-                    "El mejor y más completo IDE", "Consola para divertirte solo o con amigos",
-                    "´Servicios empresariales en la nube que responde a todo"
-                    ];
+                    "framework de desarrollo híbrido",
+                    "las empresas ahora optan por _______ computing",
+                    "El mejor y más completo IDE",
+                    "Consola para divertirte solo o con amigos",
+                    "Servicios empresariales en la nube que responde a todo",
+                    "Aplicaciones para la oficina basadas en la nube",
+                    "Juego basado en cubos que fomenta la creatividad",
+                    "Potente plataforma para el desarrollo de juegos",
+                    "framework de javascript para manejar adecuadamente el " +
+                    "el uso de la DOM en diferentes navegadores"];
 var systemsWordsCount = systemsWords.length;
 var chosenWord = "";
 var wordIndex = 0;
@@ -31,6 +39,12 @@ var chars = [''];
         document.getElementById("btBackCategories").addEventListener("click", showMain, false);
         document.getElementById("btBackScreenPlay").addEventListener("click", showConfirm, false);
         document.getElementById("btHelp").addEventListener("click", displayHelp, false);
+        document.getElementById("btTry").addEventListener("click", checkInput, false);
+        $("#letter").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#btTry").click();
+            }
+        });
         document.addEventListener("backbutton", function (e) {
             if (lugar == "main") {
                 e.preventDefault();
@@ -79,6 +93,7 @@ function playGame(choosen) {
     $('#categories').addClass('hidden');
     $('#pantallaJugar').removeClass('hidden');
     drawSpace();
+    playing = true;
 }
 
 function showCategories() {
@@ -104,6 +119,7 @@ function backCategories() {
     lugar = "categories";
     $('#categories').removeClass('hidden');
     $('#pantallaJugar').addClass('hidden');
+    playing = true;
 }
 
 function showConfirm() {
@@ -126,18 +142,20 @@ function drawSpace() {
     var cWidth = canvas.width/2;
     var cHeight = canvas.height/2;
     var ctx = canvas.getContext("2d");
-    ctx.font = "10px Arial";
+    ctx.font = "20px Arial";
     ctx.beginPath();
+    var j = 0;
     for (var i = 0; i < chosenWord.length; i++) {
-        if(cWidth+(i*10) >= canvas.width){
+        cWidth += j * 20;
+        if(cWidth >= canvas.width){
             cWidth = canvas.width / 2;
-            cHeight += 20;
+            cHeight += 40;
+            j = 0;
         }
-        if(chosenWord.charAt(i) == ' '){
-            ctx.fillText(" ", cWidth + (i * 10), cHeight);
-        }else{
-            ctx.fillText("_", cWidth+(i*10), cHeight);
+        if (chosenWord.charAt(i) != ' ') {
+            ctx.fillText("_", cWidth, cHeight);
         }
+        j++;
     }
     ctx.stroke();
 }
@@ -177,9 +195,33 @@ function drawWrong(time) {
         case 5:
             var img = document.getElementById("deathImage");
             ctx.drawImage(img, posX - 24, posY + 2, 48, 108);
-            navigator.notification.alert("No eras tan bueno como creias",null,"Te hemos colgado!","Lo sé :(");
+            navigator.notification.alert("No eras tan bueno como creias", null, "Te hemos colgado!", "Lo sé :(");
+            playing = false;
             break;
     };
+    ctx.stroke();
+}
+
+function drawLetter(character) {
+    var canvas = document.getElementById("myCanvas");
+    var cWidth = canvas.width / 2;
+    var cHeight = canvas.height / 2;
+    var ctx = canvas.getContext("2d");
+    ctx.font = "20px Arial";
+    ctx.beginPath();
+    var j = 0;
+    for (var i = 0; i < chosenWord.length; i++) {
+        cWidth += (j * 20);
+        if(cWidth >= canvas.width){
+            cWidth = canvas.width / 2;
+            cHeight += 40;
+            j = 0;
+        }
+        if(character == chosenWord.charAt(i)){
+            ctx.fillText(character, cWidth, cHeight-2);
+        }
+        j++;
+    }
     ctx.stroke();
 }
 function displayHelp() {
@@ -187,27 +229,40 @@ function displayHelp() {
 }
 
 function checkInput() {
-    var ch = $('#letter').prop("value");
-    if(chosenWord.includes(ch)){
-        if(chars.indexOf(ch) == -1){
-            chars.concat(ch);
+    if(playing){
+        var ch = $('#letter').prop("value");
+        if(chosenWord.indexOf(ch) != -1){
+            if (chars.indexOf(ch) == -1 && ch != ' ') {
+                drawLetter(ch);
+                chars.push(ch);
+            }
+            if (doYouWin()) {
+                displayVictory();
+                playing = false;
+            }
+        } else {
+            timeFail++;
+            drawWrong(timeFail);
         }
-    }
-    if(doYouWin()){
-        displayVictory();
+        $('#letter').val("");
+    } else {
+        displayResetMessage();
     }
 }
 
 function displayVictory() {
     navigator.notification.alert("Muy bien", null, "Ganaste!", "Fácil ;)");
-    backCategories();
 }
 
 function doYouWin() {
     for (var i = 0; i < chosenWord.length; i++){
-        if(chars.indexOf(chosenWord.charAt(i)) == -1){
+        if(chars.indexOf(chosenWord.charAt(i)) == -1 && chosenWord.charAt(i) != ' '){
             return false;
         }
     }
     return true;
+}
+
+function displayResetMessage() {
+    navigator.notification.alert("Debes salir y volver a entrar", null, "Sigue jugando!", "OK");
 }
