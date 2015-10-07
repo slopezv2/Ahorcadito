@@ -7,13 +7,16 @@ var posX = 0;
 var posY = 0;
 var category = "";
 var systemsWords = ["microsoft", "cordova", "cloud", "visual studio", "xbox", "azure"];
+var timeFail = 0;
 var systemsHelp = ["Empresa que surge y revoluciona las computadoras personales",
                     "framework de desarrollo híbrido", "las empresas ahora optan por _______ computing",
-                    "El mejor y más completo IDE", "Consola para divertirte solo o con amigos", "´Servicios empresariales en la nube que responde a todo"
+                    "El mejor y más completo IDE", "Consola para divertirte solo o con amigos",
+                    "´Servicios empresariales en la nube que responde a todo"
                     ];
 var systemsWordsCount = systemsWords.length;
 var chosenWord = "";
-
+var wordIndex = 0;
+var chars = [''];
 (function () {
     "use strict";
 
@@ -27,7 +30,7 @@ var chosenWord = "";
         document.getElementById("systemsOption").addEventListener("click", playSystems, false);
         document.getElementById("btBackCategories").addEventListener("click", showMain, false);
         document.getElementById("btBackScreenPlay").addEventListener("click", showConfirm, false);
-        
+        document.getElementById("btHelp").addEventListener("click", displayHelp, false);
         document.addEventListener("backbutton", function (e) {
             if (lugar == "main") {
                 e.preventDefault();
@@ -35,9 +38,7 @@ var chosenWord = "";
             }
             else if (lugar == "pantallaJugar") {
                 e.preventDefault();
-                $("#pantallaJugar").addClass('hidden');
-                $("#categories").removeClass('hidden');
-                lugar = "categories";
+                backCategories();
             } else if (lugar == "categories") {
                 $("#categories").addClass('hidden');
                 $("#main").removeClass('hidden');
@@ -70,7 +71,7 @@ function playGame(choosen) {
     switch (choosen) {
         case "systems":
             category = "systems";
-            var wordIndex = Math.floor(Math.random() * (systemsWordsCount - 1));
+            wordIndex = Math.floor(Math.random() * (systemsWordsCount - 1));
             chosenWord = systemsWords[wordIndex];
             break;
     };
@@ -92,7 +93,11 @@ function showMain() {
 }
 
 function backCategories() {
-
+    posX = 0;
+    posY = 0;
+    timeFail = 0;
+    chars = [''];
+    chosenWord = "";
     var canvas = document.getElementById("myCanvas");
     var context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -112,8 +117,7 @@ function showConfirm() {
 function onConfirm(buttonIndex) {
     if(buttonIndex == 1){
         backCategories();
-        posX = 0;
-        posY = 0;
+        
     }
 }
 
@@ -177,4 +181,33 @@ function drawWrong(time) {
             break;
     };
     ctx.stroke();
+}
+function displayHelp() {
+    navigator.notification.alert(systemsHelp[wordIndex], null, "Ayuda", "Gracias :)");
+}
+
+function checkInput() {
+    var ch = $('#letter').prop("value");
+    if(chosenWord.includes(ch)){
+        if(chars.indexOf(ch) == -1){
+            chars.concat(ch);
+        }
+    }
+    if(doYouWin()){
+        displayVictory();
+    }
+}
+
+function displayVictory() {
+    navigator.notification.alert("Muy bien", null, "Ganaste!", "Fácil ;)");
+    backCategories();
+}
+
+function doYouWin() {
+    for (var i = 0; i < chosenWord.length; i++){
+        if(chars.indexOf(chosenWord.charAt(i)) == -1){
+            return false;
+        }
+    }
+    return true;
 }
