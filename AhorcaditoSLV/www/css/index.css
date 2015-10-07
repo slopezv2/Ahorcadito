@@ -1,7 +1,11 @@
 ﻿body {
+    background-color: #EEEEEE;
 }
 .btn-success{
     height: 60px;
+}
+.jumbotron{
+    background-color: #F8F8F8;
 }
 
 canvas{
